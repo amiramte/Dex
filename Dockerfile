@@ -1,27 +1,26 @@
+FROM python:3.9.19
 FROM python:3.9
 LABEL authors="amir"
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY requirements.txt ./
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-# python -m pip install "Django>=4.1,<4.2"
-# python -m pip install pipreqs
-# pipreqs . --force
+
+COPY CryptoCurrencyExchange/* .
+
+#COPY .env ./Exchange/
+
+RUN groupadd -r dex && useradd -r -g dex dex \
+    && chown -R dex:dex /app
+
+USER dex
 
 
-# pip install django python-dotenv Pillow plotly requests pytz bitcoin eth-account django-creditcards
-
-
-
-
-
-COPY CryptoCurrencyExchange/ .
-COPY .env ./Exchange/
-
-
-WORKDIR ./Exchange
-RUN python manage.py migrate
+WORKDIR /app/Exchange
+#RUN python manage.py migrate
 EXPOSE 8000
 #CMD ["python", "./manage.py", "runserver"]
-CMD ["sleep", "infinity"]
+#CMD ["sleep", "infinity"]
+
+CMD ["gunicorn", "--chdir", "/app/Exchange", "Exchange.wsgi:application", "--bind", "0.0.0.0:8000"]
