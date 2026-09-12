@@ -1,0 +1,24 @@
+annotations:
+  artifacthub.io/links: |
+    - name: source
+      url: https://github.com/MacroPower/containers/pkgs/container/kubernetes-python
+    - name: chart
+      url: https://github.com/MacroPower/helm-charts/tree/main/charts/kubernetes-python
+apiVersion: v2
+appVersion: "1.0"
+dependencies:
+- name: common
+  repository: https://bjw-s.github.io/helm-charts
+  version: 3.1.0
+description: A helm chart for kubernetes-python.
+home: https://github.com/MacroPower/containers/pkgs/container/kubernetes-python
+keywords:
+- kubernetes
+- helm
+- python
+kubeVersion: '>=1.22.0-0'
+maintainers:
+- email: jacobcolvin1@gmail.com
+  name: MacroPower
+name: kubernetes-python
+version: 0.1.1
