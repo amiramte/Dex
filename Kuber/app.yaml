@@ -24,6 +24,20 @@ spec:
                 name: app-secret
             - secretRef:
                 name: db-secret
+        - name: collect-static
+          image: dex:1.0.0
+          command: ["python", "manage.py", "collectstatic", "--noinput"]
+          workingDir: /app
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secret
+            - secretRef:
+                name: db-secret
+          volumeMounts:
+            - name: static-files
+              mountPath: /app/static
       containers:
         - name: app
           image: dex:1.0.0
@@ -57,6 +71,23 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 3
             failureThreshold: 3
+        - name: nginx-static
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: static-files
+              mountPath: /usr/share/nginx/html/static
+              readOnly: true
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+      volumes:
+        - name: static-files
+          emptyDir: {}
+        - name: nginx-config
+          configMap:
+            name: nginx-config
 
 ---
 apiVersion: v1
@@ -67,6 +98,10 @@ spec:
   selector:
     app: dex
   ports:
-    - port: 80
+    - name: dex
+      port: 80
       targetPort: 8000
+    - name: static
+      port: 8080
+      targetPort: 8080
   type: ClusterIP

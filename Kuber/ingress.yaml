@@ -3,17 +3,25 @@ kind: Ingress
 metadata:
   name: dex
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    #nginx.ingress.kubernetes.io/rewrite-target: /$1
+    #nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
   rules:
     - host: dex.local
       http:
         paths:
+          - path: /static/ #(img|js|css|vendor)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dex
+                port:
+                  name: static
           - path: /
             pathType: Prefix
             backend:
               service:
                 name: dex
                 port:
-                  number: 80
+                  name: dex
