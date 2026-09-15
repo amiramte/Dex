@@ -7,3 +7,4 @@ kubectl -n ${NAMESPACE} apply -f postgres.yaml
 kubectl -n ${NAMESPACE} apply -f configmap-secret.yaml
 kubectl -n ${NAMESPACE} apply -f app.yaml
 kubectl -n ${NAMESPACE} apply -f ingress.yaml
+kubectl -n ${NAMESPACE} apply -f backup.yaml
