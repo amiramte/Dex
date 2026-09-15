@@ -10,7 +10,8 @@ Dejango/Python Dex for experimental use.
        change "SECRET_KEY = "..."" to "SECRET_KEY = os.environ.get("SECRET_KEY"). secrets shall not get commited in repositories.
        change "ALLOWED_HOSTS = []" to "ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',') if os.environ.get('ALLOWED_HOSTS') else []" so that its value could be passed as an environment variable.
        add "STATIC_ROOT = BASE_DIR / "staticfiles"" in order to serve static files seprately.
-4. Build the docker image considering the version and push it to your docker registery.
+4. The requirements.txt files should be checked. Its has dependencies and their appropriate versions for python 3.9 (which is used by the developer).
+5. Build the docker image considering the version and push it to your docker registery.
         
        docker build -t dex:1.0.0 .
 5. Create kubernetes name space 
@@ -134,6 +135,7 @@ base on what you found above, these actions could be done
 3. TLS (or mutual TLS) connection between app parts (dex, database, ...).
 4. Serving static files outside the pod for example by a objectstorage + ingress.
 5. Init containers in multiple replicas could cause problems.
+6. Python dependencies should be well identified and compatibility checked. 
 ### Database
 1. Single instance database. It can be clustered for HA and better performance.
 2. Backups are stored in same storage. Its better to have them on an external storage.
